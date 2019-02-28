@@ -1,5 +1,15 @@
 let expression;
 
+// Helper groupby function
+Array.prototype.groupBy = function(prop) {
+    return this.reduce(function(groups, item) {
+      const val = item[prop]
+      groups[val] = groups[val] || []
+      groups[val].push(item)
+      return groups
+    }, {})
+  }
+
 const DEFAULT_EXPRESSION = "r1(x) r1(y) w2(x) w1(x) r2(y)"
 
 $("#expressionInput").keyup((e)=>{
@@ -26,7 +36,9 @@ function expressionParser(text){
     clearAll(); 
         // Replace operations with transactions 
     // let transactions = Object.keys(_.groupBy(text.replace(new RegExp('w|r', 'g'), 'T').replace(/\(.\w*\)/gi, '').split(' ')))
-    let transactions = text.replace(new RegExp('w|r', 'g'), 'T').replace(/\(.\w*\)/gi, '').split(' ').reduce( (acc, value) => {
+    let allTransactions = text.replace(new RegExp('w|r', 'g'), 'T').replace(/\(.\w*\)/gi, '').split(' ');
+    let allVariables = text.match(/\(.\w*\)/gi).map(v => v.replace('(', '').replace(')', ''));
+    let transactions = allTransactions.reduce( (acc, value) => {
         
         if (acc.length === 0){
             acc.push(value)
@@ -37,11 +49,24 @@ function expressionParser(text){
 
     }, []);
 
-    let variables = Array.from(new Set(text.match(/\(.\w*\)/gi).map(v => v.replace('(', '').replace(')', ''))))
+    let variables = Array.from(new Set(allVariables))
+
+    // variable transaction group
+    let _variableTransactionGroup = _.zip(allVariables, allTransactions).map(x => {return {variable: x[0], transaction: x[1]}}).groupBy('transaction')
+    let variableTransactionGroup = {}
+    Object.keys(_variableTransactionGroup).map((k, i) => {
+        variableTransactionGroup[k] = Array.from(new Set(_variableTransactionGroup[k].map(x => x.variable)))
+    })
+
+
+    console.log({variableTransactionGroup: _variableTransactionGroup})
+    console.log({variableTransaction: variableTransactionGroup})
     
     // (new RegExp("(|)", 'g'), ''))
     console.log({'extracted' : variables})
     console.log(transactions)
+    console.log({allTransactions: allTransactions})
+    console.log({allVariables: allVariables});
 
     _.each(transactions, (T)=>{
         $("#transactions").append(
@@ -76,7 +101,23 @@ function expressionParser(text){
         }
     }, Object.create(null));
 
-    let reducedEdges = edges.map(function(d){
+    console.log({edges: edges})
+
+    let connectedEdgesByVariable = [];
+
+    for (let j = 0; j < edges.length; j++){
+        let sourceVariables = variableTransactionGroup[ edges[j].source ];
+        let targetVariables = variableTransactionGroup[ edges[j].target ];
+
+        let commonVariables = _.intersection(sourceVariables, targetVariables);
+
+        if (commonVariables.length > 0){
+            connectedEdgesByVariable.push( edges[j] )
+        }
+    }
+
+
+    let reducedEdges = connectedEdgesByVariable.map(function(d){
         return {
             data: {
                 source: d.source,
