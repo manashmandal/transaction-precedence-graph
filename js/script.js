@@ -100,6 +100,12 @@ function expressionParser(text){
 
         style: [
             {
+                selector: 'node',
+                style: {
+                    'content' : 'data(name)'
+                }
+            },
+            {
                 selector: 'edge',
                 style: {
                   'curve-style': 'bezier',
