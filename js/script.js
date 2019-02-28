@@ -87,10 +87,17 @@ function expressionParser(text){
         nodes.push({data: { id: T, name: T }})
     })
 
-    for (let i = 0; i < transactions.length - 1; i++){
-        _edges.push({source: transactions[i],
-                    target: transactions[i + 1]
-        })
+    for (let i = 0; i < transactions.length; i++){
+        for (let j = 0; j < transactions.length - 1; j++){
+            if (transactions[i] !== transactions[j + 1]){
+
+                _edges.push({
+                    source: transactions[i],
+                    target: transactions[j + 1]
+                })
+
+            }
+        }
     }
 
     let edges = _edges.filter(function (a) {
