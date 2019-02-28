@@ -13,8 +13,6 @@ let conflictMessageObject = {
     }
 }
 
-
-
 // Helper groupby function
 Array.prototype.groupBy = function(prop) {
     return this.reduce(function(groups, item) {
@@ -137,7 +135,7 @@ function expressionParser(text){
             }
         }
 
-    }); //r1(x) r2(x) w1(x) t2(x)
+    }); 
 
     cy = cytoscape({
 
@@ -169,7 +167,5 @@ function expressionParser(text){
 
     // console.log(cy.)
     $("#verdict").attr('class', conflictMessageObject[verdict].alert).text(conflictMessageObject[verdict].message)
-
     }
-    
 }
