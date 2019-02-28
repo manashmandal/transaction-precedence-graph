@@ -138,20 +138,6 @@ function expressionParser(text){
         }
     }, Object.create(null));
 
-
-    // let connectedEdgesByVariable = [];
-
-    // for (let j = 0; j < edges.length; j++){
-    //     let sourceVariables = variableTransactionGroup[ edges[j].source ];
-    //     let targetVariables = variableTransactionGroup[ edges[j].target ];
-
-    //     let commonVariables = _.intersection(sourceVariables, targetVariables);
-
-    //     if (commonVariables.length > 0){
-    //         connectedEdgesByVariable.push( edges[j] )
-    //     }
-    // }
-
     // For graphlib
     let G = new graphlib.Graph();
     Array.from(new Set(allTransactions)).map(T => {
@@ -160,7 +146,6 @@ function expressionParser(text){
 
     let reducedEdges = edges.map(function(d){
         G.setEdge(d.source, d.target);
-
         return {
             data: {
                 source: d.source,
@@ -196,7 +181,7 @@ function expressionParser(text){
         ]
     })
 
-    let verdict = !graphlib.alg.isAcyclic(G); //cy.edges().isLoop();
+    let verdict = !graphlib.alg.isAcyclic(G); 
 
     // console.log(cy.)
     $("#verdict").attr('class', conflictMessageObject[verdict].alert).text(conflictMessageObject[verdict].message)
