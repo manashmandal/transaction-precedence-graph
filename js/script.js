@@ -12,9 +12,6 @@ $("#defaultExpressionButton").on('click', ()=>{
     $("#expressionInput").val(DEFAULT_EXPRESSION);
 })
 
-console.log(Object.keys(_.groupBy([
-    'T4', 'T2', 'T1', 'T3', 'T3'
-])))
 
 function clearAll(){
     $("#transactions").empty()
