@@ -10,3 +10,9 @@ nav {
     position: relative;
     left: -45px;
 }
+
+div#viz {
+    position: relative;
+    align-self: center;
+    border: 1px solid black;
+}

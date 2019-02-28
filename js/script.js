@@ -4,12 +4,12 @@ let cy;
 let conflictMessageObject = {
     true : {
         alert: "alert alert-success",
-        message: "The Transaction Precedence Graph is Non-Conflicting"
+        message: "The transaction is not conflict serializable."
     },
 
     false: {
         alert: "alert alert-danger",
-        message: "The Transaction Precedence Graph is Conflicting"
+        message: "The transaction is conflict serializable."
     }
 }
 
