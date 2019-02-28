@@ -1,4 +1,19 @@
 let expression;
+let cy;
+
+let conflictMessageObject = {
+    true : {
+        alert: "alert alert-success",
+        message: "The Transaction Precedence Graph is Non-Conflicting"
+    },
+
+    false: {
+        alert: "alert alert-danger",
+        message: "The Transaction Precedence Graph is Conflicting"
+    }
+}
+
+
 
 // Helper groupby function
 Array.prototype.groupBy = function(prop) {
@@ -20,6 +35,7 @@ $("#expressionInput").keyup((e)=>{
 $("#defaultExpressionButton").on('click', ()=>{
     expression = DEFAULT_EXPRESSION;
     $("#expressionInput").val(DEFAULT_EXPRESSION);
+    expressionParser(expression);
 })
 
 
@@ -57,16 +73,6 @@ function expressionParser(text){
     Object.keys(_variableTransactionGroup).map((k, i) => {
         variableTransactionGroup[k] = Array.from(new Set(_variableTransactionGroup[k].map(x => x.variable)))
     })
-
-
-    console.log({variableTransactionGroup: _variableTransactionGroup})
-    console.log({variableTransaction: variableTransactionGroup})
-    
-    // (new RegExp("(|)", 'g'), ''))
-    console.log({'extracted' : variables})
-    console.log(transactions)
-    console.log({allTransactions: allTransactions})
-    console.log({allVariables: allVariables});
 
     _.each(transactions, (T)=>{
         $("#transactions").append(
@@ -108,7 +114,6 @@ function expressionParser(text){
         }
     }, Object.create(null));
 
-    console.log({edges: edges})
 
     let connectedEdgesByVariable = [];
 
@@ -132,9 +137,9 @@ function expressionParser(text){
             }
         }
 
-    });
+    }); //r1(x) r2(x) w1(x) t2(x)
 
-    cytoscape({
+    cy = cytoscape({
 
         container: document.getElementById('viz'), // container to render in
       
@@ -159,7 +164,11 @@ function expressionParser(text){
             },
         ]
     })
-    
+
+    let verdict = cy.edges().isSimple();
+
+    // console.log(cy.)
+    $("#verdict").attr('class', conflictMessageObject[verdict].alert).text(conflictMessageObject[verdict].message)
 
     }
     
