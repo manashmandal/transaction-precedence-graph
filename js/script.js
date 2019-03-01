@@ -77,7 +77,7 @@ function expressionParser(text){
 
     // variable transaction group, T1 -> [x, x, y , z]
     let _variableTransactionGroup = _.zip(allVariables, allTransactions).map(x => {return {variable: x[0], transaction: x[1]}}).groupBy('transaction')
-    // varaible tansaction map, x -> [T1, T1, T2, T3]
+    // variable tansaction map, x -> [T1, T1, T2, T3]
     let _variableToTransactionMap = _.zip(allVariables, allTransactions).map(x => {return {variable: x[0], transaction: x[1]}}).groupBy('variable')
 
     let variableTransactionGroup = {}
